@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'coin_data.dart';
 
 class PriceScreen extends StatefulWidget {
   @override
@@ -6,9 +8,23 @@ class PriceScreen extends StatefulWidget {
 }
 
 class _PriceScreenState extends State<PriceScreen> {
-  String selectedProp = "qwe";
+  String selectedProp = null;
+  List<DropdownMenuItem<String>> getDropdownItems(){
+    List<DropdownMenuItem<String>> dropList = [];
+
+    for(int i=0;i< currenciesList.length; i++ ){
+      String cur = currenciesList[i];
+      var item = DropdownMenuItem(
+        child: Text(cur),
+        value: cur,
+      );
+      dropList.add(item);
+    }
+    return dropList;
+  }
   @override
   Widget build(BuildContext context) {
+    getDropdownItems();
     return Scaffold(
       appBar: AppBar(
         title: Text('🤑 Coin Ticker'),
@@ -43,27 +59,13 @@ class _PriceScreenState extends State<PriceScreen> {
             alignment: Alignment.center,
             padding: EdgeInsets.only(bottom: 30.0),
             color: Colors.lightBlue,
-            child: DropdownButton<String>(
-              value: selectedProp,
-              items: [
-                DropdownMenuItem(
-                  child: Text("qwe"),
-                  value: "qwe",
-                ),
-                DropdownMenuItem(
-                  child: Text("asd"),
-                  value: "aasd",
-                ),
-                DropdownMenuItem(
-                  child: Text("zxc"),
-                  value: "zxcv",
-                )
-              ],
-              onChanged: (v){
-                setState(() {
-                  selectedProp = v;
-                });
+            child: CupertinoPicker(
+              backgroundColor: Colors.lightBlue,
+              itemExtent: 32,
+              onSelectedItemChanged: (id){
+
               },
+              children: getDropdownItems(),
             ),
           ),
         ],
@@ -71,3 +73,14 @@ class _PriceScreenState extends State<PriceScreen> {
     );
   }
 }
+
+/*
+DropdownButton<String>(
+              value: selectedProp,
+              items: getDropdownItems(),
+              onChanged: (v){
+                setState(() {
+                  selectedProp = v;
+                });
+              },
+            ) */

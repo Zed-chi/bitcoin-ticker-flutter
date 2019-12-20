@@ -5,11 +5,17 @@ import 'dart:io' show Platform;
 
 
 class PriceScreen extends StatefulWidget {
+  
   @override
   _PriceScreenState createState() => _PriceScreenState();
 }
 
 class _PriceScreenState extends State<PriceScreen> {
+  final dynamic json = CoinData().getCoinData();
+  int getValue(cur){
+    return json[cur];
+  }
+
   String selectedProp = null;
 
   Widget getPicker(){
@@ -87,7 +93,7 @@ class _PriceScreenState extends State<PriceScreen> {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                 child: Text(
-                  '1 BTC = ? USD',
+                  '1 BTC = ${getValue(selectedProp)} USD',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20.0,

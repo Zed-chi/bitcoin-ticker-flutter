@@ -11,12 +11,23 @@ class PriceScreen extends StatefulWidget {
 }
 
 class _PriceScreenState extends State<PriceScreen> {
-  final dynamic json = CoinData().getCoinData();
-  int getValue(cur){
-    return json[cur];
+  @override
+  void initState() {    
+    super.initState();
+    getValue();
   }
 
-  String selectedProp = null;
+  String value;
+
+  void getValue() async{
+    var json = await CoinData().getCoinData(selectedProp);
+    print(json);
+    setState(() {
+      value = json["last"].toString();
+    });
+  }
+
+  String selectedProp = "USD";
 
   Widget getPicker(){
     if(Platform.isAndroid){
@@ -93,7 +104,7 @@ class _PriceScreenState extends State<PriceScreen> {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                 child: Text(
-                  '1 BTC = ${getValue(selectedProp)} USD',
+                  '1 BTC = $value USD',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20.0,

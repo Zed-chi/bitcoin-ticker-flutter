@@ -1,7 +1,7 @@
-import 'network.dart';
-import 'dart:convert';
+import "package:http/http.dart";
+import "dart:convert";
 
-
+const baseUrl = "https://apiv2.bitcoinaverage.com";
 const List<String> currenciesList = [
   'AUD',
   'BRL',
@@ -33,10 +33,15 @@ const List<String> cryptoList = [
 ];
 
 class CoinData {
-  dynamic getCoinData(){
-    var net = Network();
-    var data = net.getJsonData();
-    var json = jsonDecode(data);
-    return json;
+  dynamic getCoinData( cur )async {
+    String url = "$baseUrl/indices/global/ticker/BTC$cur";
+    print(url);
+    var res = await get(url);
+    if (res.statusCode == 200){
+      return jsonDecode(res.body);
+    } else{
+      print("Error");
+      return null;
+    }
   }
 }

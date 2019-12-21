@@ -13,17 +13,41 @@ class PriceScreen extends StatefulWidget {
 class _PriceScreenState extends State<PriceScreen> {
   @override
   void initState() {    
-    super.initState();
-    getValue();
+    super.initState();  
+    updateCards();  
   }
-
+  List<Widget> cards = [Text("qwe")];
   String value;
 
-  void getValue() async{
-    var json = await CoinData().getCoinData(selectedProp);
-    print(json);
+  void updateCards()async{
+    List<Card> tempCards = [];
+    dynamic json = await CoinData().getAllCoinData(selectedProp);    
+    for (var crypt in json.keys){      
+      var value = json[crypt]["last"];
+      print("$crypt:$value");
+      tempCards.add(
+        Card(
+          color: Colors.lightBlueAccent,
+          elevation: 5.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
+            child: Text(
+              '1 ${crypt.substring(0,3)} = ${value.toInt()} $selectedProp',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20.0,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
     setState(() {
-      value = json["last"].toString();
+      cards = tempCards;
     });
   }
 
@@ -44,6 +68,7 @@ class _PriceScreenState extends State<PriceScreen> {
       onChanged: (v){
         setState(() {
           selectedProp = v;
+          updateCards();
         });
       },
     );
@@ -54,7 +79,10 @@ class _PriceScreenState extends State<PriceScreen> {
       backgroundColor: Colors.lightBlue,
       itemExtent: 32,
       onSelectedItemChanged: (id){
-
+        setState(() {
+          selectedProp = getTextItems()[id];
+          updateCards();
+        });
       },
       children: getTextItems(),
     );
@@ -95,24 +123,9 @@ class _PriceScreenState extends State<PriceScreen> {
         children: <Widget>[
           Padding(
             padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
-            child: Card(
-              color: Colors.lightBlueAccent,
-              elevation: 5.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
-                child: Text(
-                  '1 BTC = $value USD',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
+            child: Column(
+              children: cards,
+            )
           ),
           Container(
             height: 150.0,

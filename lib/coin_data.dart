@@ -35,13 +35,25 @@ const List<String> cryptoList = [
 class CoinData {
   dynamic getCoinData( cur )async {
     String url = "$baseUrl/indices/global/ticker/BTC$cur";
+    var res = await get(url);
+    if (res.statusCode == 200){
+      return jsonDecode(res.body);
+    } else{   
+      return null;
+    }
+  }
+
+  dynamic getAllCoinData(String cur) async{
+    String crypts = cryptoList.join(",");
+    String url = "$baseUrl/indices/global/ticker/short?crypto=$crypts&fiat=$cur";    
     print(url);
     var res = await get(url);
     if (res.statusCode == 200){
       return jsonDecode(res.body);
-    } else{
-      print("Error");
-      return null;
+    } else{    
+      print("ERROR");      
+      return {"Message": "error"};
     }
   }
+
 }
